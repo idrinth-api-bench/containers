@@ -1,2 +1,3 @@
-# project-defaults
-These are the defaults of our projects, so make sure to use this for creating new repositories or updating existing ones.
+# idrinth-api-bench/containers
+
+These are all of our docker containers, that handle CI and history visualization.
