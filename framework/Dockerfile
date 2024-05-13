@@ -37,4 +37,27 @@ RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
 COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
 
 WORKDIR /project
+WORKDIR /api-bench/framework
+RUN npm ci \
+    && ls -la \
+    && npm run language \
+    && npm run tsc \
+    && npm prune --production \
+    && (rm ./src/**/*.ts || true) \
+    && (rm ./node_modules/**/*.ts || true) \
+    && (rm ./README.md || true) \
+    && (rm ./index.ts || true) \
+    && (rm ./tsconfig.json || true) \
+    && (rm ./LICENSE || true) \
+    && (rm -r ./typings || true) \
+    && (rm -r ./integration || true) \
+    && (rm -r ./property || true) \
+    && (rm -r ./test || true) \
+    && (rm -r ./tools || true) \
+    && (rm -r ./fixtures || true) \
+    && (rm -r ./language || true) \
+    && clean-modules clean --yes \
+    && mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench \
+    && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/ \
+    && git clone https://github.com/idrinth-api-bench/framework
 VOLUME /project
