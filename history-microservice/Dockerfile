@@ -46,7 +46,8 @@ RUN npm ci \
     && cp --recursive /api-bench/history-microservice/* /project/@idrinth/api-bench/history-microservice/ \
     && cp /api-bench/history-microservice/.env /project/@idrinth/api-bench/history-microservice/ \
     && git clone https://github.com/idrinth-api-bench/history-microservice
-COPY --from=build /project/@idrinth/api-bench/history-microservice /project
+
+COPY . .
 
 EXPOSE 80
 

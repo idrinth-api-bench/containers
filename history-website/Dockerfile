@@ -35,7 +35,6 @@ ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-WORKDIR /var/www/html
 WORKDIR /api-bench/history-website
 RUN npm ci \
     && npm run language \
@@ -43,7 +42,8 @@ RUN npm ci \
     && mkdir -p /project/@idrinth/api-bench/history-website \
     && cp --recursive /api-bench/history-website/dist/* /project/@idrinth/api-bench/history-website/ \
     && git clone https://github.com/idrinth-api-bench/history-website
-COPY --from=build /project/@idrinth/api-bench/history-website /var/www/html
+
+COPY . .
 
 EXPOSE 80
 

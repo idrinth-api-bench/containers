@@ -34,9 +34,8 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
+COPY . .
 
-WORKDIR /project
 WORKDIR /api-bench/framework
 RUN npm ci \
     && ls -la \
