@@ -37,13 +37,12 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /api-bench/history-website
 RUN npm ci \
-    && npm run language \
     && npm run build \
     && mkdir -p /project/@idrinth/api-bench/history-website \
     && cp --recursive /api-bench/history-website/dist/* /project/@idrinth/api-bench/history-website/ \
-    && git clone https://github.com/idrinth-api-bench/history-website
-
-COPY . .
+    && git clone https://github.com/idrinth-api-bench/history-website \
+    && npm run language
+COPY ./history-website /api-bench/history-website/
 
 EXPOSE 80
 

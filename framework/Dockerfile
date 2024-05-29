@@ -34,10 +34,14 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-COPY . .
+COPY ./framework /api-bench/framework
 
 WORKDIR /api-bench/framework
 RUN npm ci \
+    && clean-modules clean --yes \
+    && mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench \
+    && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/ \
+    && git clone https://github.com/idrinth-api-bench/framework \
     && ls -la \
     && npm run language \
     && npm run tsc \
@@ -54,9 +58,5 @@ RUN npm ci \
     && (rm -r ./test || true) \
     && (rm -r ./tools || true) \
     && (rm -r ./fixtures || true) \
-    && (rm -r ./language || true) \
-    && clean-modules clean --yes \
-    && mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench \
-    && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/ \
-    && git clone https://github.com/idrinth-api-bench/framework
+    && (rm -r ./language || true)
 VOLUME /project
