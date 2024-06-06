@@ -1,6 +1,6 @@
 ARG BUILD_VERSION
 
-FROM idrinth/api-bench-build:${BUILD_VERSION} AS build
+FROM node:21.7.3-alpine AS build
 FROM node:21.7.3-alpine AS node
 FROM gitlab/gitlab-runner:alpine3.19-v16.10.0 AS gitlab
 

@@ -1,7 +1,7 @@
 ARG BUILD_VERSION
 
-FROM idrinth/api-bench-build:${BUILD_VERSION} AS build
 FROM node:21.7.3-alpine AS node
+FROM node:21.7.3-alpine AS build
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
@@ -33,20 +33,19 @@ LABEL org.opencontainers.image.description="A microservice prepared for monitori
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-WORKDIR /project
-WORKDIR /api-bench/history-microservice
 RUN npm ci \
-    && mkdir -p /project/@idrinth/api-bench/history-microservice \
-    && cp --recursive /api-bench/history-microservice/* /project/@idrinth/api-bench/history-microservice/ \
-    && cp /api-bench/history-microservice/.env /project/@idrinth/api-bench/history-microservice/ \
-    && git clone https://github.com/idrinth-api-bench/history-microservice \
     && npm run tsc \
     && npm prune --production \
     && (rm /api-bench/history-microservice/README.md || true) \
     && (rm /api-bench/history-microservice/src/**/*.ts || true) \
     && (rm /api-bench/history-microservice/src/**/*.ts || true) \
-    && clean-modules clean --yes
-COPY ./history-microservice /api-bench/history-microservice/
+    && clean-modules clean --yes \
+    && mkdir -p /project/@idrinth/api-bench/history-microservice \
+    && cp --recursive /api-bench/history-microservice/* /project/@idrinth/api-bench/history-microservice/ \
+    && cp /api-bench/history-microservice/.env /project/@idrinth/api-bench/history-microservice/
+
+WORKDIR /project
+COPY --from=build /project/@idrinth/api-bench/history-microservice /project
 
 EXPOSE 80
 
