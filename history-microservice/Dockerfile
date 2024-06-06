@@ -33,7 +33,8 @@ LABEL org.opencontainers.image.description="A microservice prepared for monitori
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-RUN npm ci \
+RUN git clone https://github.com/idrinth-api-bench/history-microservice.git \
+    &&npm ci \
     && npm run tsc \
     && npm prune --production \
     && (rm /api-bench/history-microservice/README.md || true) \

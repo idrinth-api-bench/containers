@@ -33,7 +33,8 @@ LABEL org.opencontainers.image.description="A website prepared for monitoring ap
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-RUN npm ci \
+RUN git clone https://github.com/idrinth-api-bench/history-website.git \
+    && npm ci \
     && npm run language \
     && npm run build \
     && mkdir -p /project/@idrinth/api-bench/history-website \
