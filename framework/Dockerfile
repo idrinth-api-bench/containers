@@ -1,6 +1,5 @@
 ARG BUILD_VERSION
 
-FROM node:21.7.3-alpine AS node
 FROM node:21.7.3-alpine AS build
 
 ARG BUILD_VERSION
@@ -34,12 +33,11 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-RUN git clone https://github.com/idrinth-api-bench/framework \
+RUN git clone https://github.com/idrinth-api-bench/framework.git \
     && npm ci \
     && clean-modules clean --yes \
     && mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench \
     && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/ \
-    && ls -la \
     && npm run language \
     && npm run tsc \
     && npm prune --production \
@@ -55,8 +53,9 @@ RUN git clone https://github.com/idrinth-api-bench/framework \
     && (rm -r ./test || true) \
     && (rm -r ./tools || true) \
     && (rm -r ./fixtures || true) \
-    && (rm -r ./language || true) \
-    && clean-modules clean --yes
+    && (rm -r ./language || true)
+
+FROM node:21.7.3-alpine AS node
 
 COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
 
