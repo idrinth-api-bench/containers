@@ -32,12 +32,10 @@ LABEL org.opencontainers.image.description="An image prepared for api-bench usag
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-RUN git clone https://github.com/idrinth-api-bench/framework.git \
+RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench/
+RUN git clone https://github.com/idrinth-api-bench/framework.git /project\
     && npm ci \
     && clean-modules clean --yes \
-    && mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench \
-    && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/ \
     && npm run language \
     && npm run tsc \
     && npm prune --production \
@@ -53,7 +51,8 @@ RUN git clone https://github.com/idrinth-api-bench/framework.git \
     && (rm -r ./test || true) \
     && (rm -r ./tools || true) \
     && (rm -r ./fixtures || true) \
-    && (rm -r ./language || true)
+    && (rm -r ./language || true) \
+    && cp --recursive /api-bench/framework/* /usr/local/lib/node_modules/@idrinth/api-bench/
 
 FROM node:21.7.3-alpine AS node
 
