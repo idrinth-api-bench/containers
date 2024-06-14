@@ -1,6 +1,14 @@
 ARG BUILD_VERSION
 
 FROM node:21.7.3-alpine AS build
+
+RUN git clone https://github.com/idrinth-api-bench/history-website.git \
+    && npm ci \
+    && npm run language \
+    && npm run build \
+    && mkdir -p /project/@idrinth/api-bench/history-website \
+    && cp --recursive /api-bench/history-website/dist/* /project/@idrinth/api-bench/history-website/
+
 FROM nginx:stable-alpine3.17-slim AS nginx
 
 ARG BUILD_VERSION
@@ -33,17 +41,10 @@ LABEL org.opencontainers.image.description="A website prepared for monitoring ap
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-RUN git clone https://github.com/idrinth-api-bench/history-website.git \
-    && npm ci \
-    && npm run language \
-    && npm run build \
-    && mkdir -p /project/@idrinth/api-bench/history-website \
-    && cp --recursive /api-bench/history-website/dist/* /project/@idrinth/api-bench/history-website/
-
 COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www/html
-COPY --from=build /project/@idrinth/api-bench/history-website /var/www/html
+COPY --from=build /var/www/html /usr/local/lib/node_modules/@idrinth-api-bench/history-website/
 
 EXPOSE 80
 

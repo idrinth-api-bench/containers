@@ -2,7 +2,6 @@ ARG BUILD_VERSION
 
 FROM node:21.7.3-alpine AS node
 FROM node:21.7.3-alpine AS build
-FROM gitea/act_runner:0.2.10 AS gitea
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib
@@ -10,7 +9,8 @@ COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
+
+FROM gitea/act_runner:0.2.10 AS gitea
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
@@ -41,3 +41,5 @@ LABEL org.opencontainers.image.description="A gitea action prepared for api-benc
 
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
+
+COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth-api-bench/gitea-action/
