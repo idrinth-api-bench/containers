@@ -45,7 +45,7 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 WORKDIR /project
-COPY --from=node /project /usr/local/lib/node_modules/@idrinth-api-bench/history-microservice
+COPY --from=build /project /usr/local/lib/node_modules/@idrinth-api-bench/history-microservice
 
 EXPOSE 80
 
