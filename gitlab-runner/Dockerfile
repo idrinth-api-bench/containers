@@ -1,16 +1,23 @@
 ARG BUILD_VERSION
 
-FROM idrinth/api-bench-build:${BUILD_VERSION} AS build
 FROM node:21.7.3-alpine AS node
-FROM gitlab/gitlab-runner:alpine3.19-v16.10.0 AS gitlab
 
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
+RUN apk add --no-cache "git=2.43.0-r0" && npm install -g clean-modules@3.0.5
+RUN git clone --reference=$BUILD_VERSION https://github.com/idrinth-api-bench/framework.git /project
+WORKDIR /project
+RUN npm ci && npm run language && npm run tsc
+RUN npm prune --production
+RUN rm -r ./src ./node_modules ./README.md ./index.ts ./tsconfig.json ./LICENSE ./typings ./integration ./property ./test ./tools ./fixtures ./language
+RUN clean-modules clean --yes
+
+COPY --from=build /usr/lib /usr/lib
+COPY --from=build /usr/local/lib /usr/local/lib
+COPY --from=build /usr/local/include /usr/local/include
+COPY --from=build /usr/local/bin /usr/local/bin
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
+
+FROM gitlab/gitlab-runner:alpine3.19-v16.10.0 AS gitlab
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
@@ -41,3 +48,7 @@ LABEL org.opencontainers.image.description="A gitlab runner prepared for api-ben
 
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
+
+COPY --from=node /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth-api-bench/gitlab-runner/
+
+WORKDIR /project

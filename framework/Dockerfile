@@ -1,6 +1,30 @@
 ARG BUILD_VERSION
 
-FROM idrinth/api-bench-build:${BUILD_VERSION} AS build
+FROM node:21.7.3-alpine AS build
+
+RUN apk add --no-cache "git=2.43.0-r0" \
+    && npm install -g clean-modules@3.0.5 \
+    && git clone --refrence=$BUILD_VERSION https://github.com/idrinth-api-bench/framework.git /project \
+    && cd /project \
+    && npm ci \
+    && npm run language \
+    && npm run tsc \
+    && npm prune --production \
+    && rm ./src/**/*.ts \
+    && rm ./node_modules/**/*.ts \
+    && rm ./README.md \
+    && rm ./index.ts \
+    && rm ./tsconfig.json \
+    && rm ./LICENSE \
+    && rm -r ./typings \
+    && rm -r ./integration \
+    && rm -r ./property \
+    && rm -r ./test \
+    && rm -r ./tools \
+    && rm -r ./fixtures \
+    && rm -r ./language \
+    && clean-modules clean --yes
+
 FROM node:21.7.3-alpine AS node
 
 ARG BUILD_VERSION
@@ -33,8 +57,7 @@ LABEL org.opencontainers.image.description="An image prepared for api-bench usag
 ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
-RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
-COPY --from=build /usr/local/lib/node_modules/@idrinth/api-bench /usr/local/lib/node_modules/@idrinth/api-bench
+COPY --from=build /project /usr/local/lib/node_modules/@idrinth-api-bench/framework/
 
 WORKDIR /project
 VOLUME /project

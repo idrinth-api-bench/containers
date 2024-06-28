@@ -1,6 +1,17 @@
 ARG BUILD_VERSION
 
-FROM idrinth/api-bench-build:${BUILD_VERSION} AS build
+FROM node:21.7.3-alpine AS build
+
+RUN apk add --no-cache "git=2.43.0-r0" \
+    && npm install -g clean-modules@3.0.5 \
+    && git clone https://github.com/idrinth-api-bench/history-microservice /project \
+    && cd /tmp/history-microservice \
+    && npm ci \
+    && npm run tsc \
+    && npm prune --production \
+    && rm -rf /tmp/history-microservice/{README.md,src/**/*.ts} \
+    && clean-modules clean --yes
+
 FROM node:21.7.3-alpine AS node
 
 ARG BUILD_VERSION
@@ -34,7 +45,7 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 WORKDIR /project
-COPY --from=build /project/@idrinth/api-bench/history-microservice /project
+COPY --from=build /project /usr/local/lib/node_modules/@idrinth-api-bench/history-microservice
 
 EXPOSE 80
 
