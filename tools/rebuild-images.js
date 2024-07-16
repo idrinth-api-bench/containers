@@ -27,7 +27,7 @@ rl.question('Versions(space separated): ', (versions,) => {
             const args = [
               `--build-arg="BUILD_VERSION=${ version }"`,
               `--build-arg="BUILD_TIME=${ new Date().toISOString() }"`,
-              `--build-arg="BUILD_HASH=${ hash }"`,
+              `--build-arg="BUILD_HASH=${ hash.replace(/\s+/ug, '') }"`,
             ];
             const tags = [
               `-t idrinthapibench/${ image }:latest`,
