@@ -1,6 +1,6 @@
 ARG BUILD_VERSION
 
-FROM node:21.7.3-alpine AS build
+FROM node:22.5.1-alpine AS build
 
 RUN git clone https://github.com/idrinth-api-bench/history-website.git /var/www/html \
     && npm ci \
