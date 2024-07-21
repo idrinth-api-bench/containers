@@ -1,11 +1,13 @@
-ARG BUILD_VERSION
-
 FROM node:21.7.3-alpine AS build
 
-RUN apk add --no-cache "git=2.43.0-r0" \
-    && npm install -g clean-modules@3.0.5 \
-    && git clone --refrence=$BUILD_VERSION https://github.com/idrinth-api-bench/framework.git /project \
+ARG BUILD_VERSION
+
+RUN apk add --no-cache git=2.45.2-r0 python3 make unixodbc
+RUN npm install -g clean-modules@3.0.5 \
+    && git clone --depth=1 https://github.com/idrinth-api-bench/framework.git /project \
     && cd /project \
+    && git fetch origin --tags \
+    && git checkout $BUILD_VERSION \
     && npm ci \
     && npm run language \
     && npm run tsc \
@@ -58,6 +60,8 @@ ENV IDRINTH_API_BENCH_VERSION=$BUILD_VERSION
 ENV IDRINTH_API_BENCH_BUILT=$BUILD_TIME
 
 COPY --from=build /project /usr/local/lib/node_modules/@idrinth-api-bench/framework/
+RUN ln -s /usr/local/lib/node_modules/@idrinth-api-bench/framework/bin/iab.js /bin/iab \
+    && chmod +x /bin/iab
 
 WORKDIR /project
 VOLUME /project
