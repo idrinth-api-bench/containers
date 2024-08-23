@@ -1,4 +1,4 @@
-FROM node:22.5.1-alpine AS build
+FROM node:22.7.0-alpine AS build
 
 ARG BUILD_VERSION
 
@@ -27,7 +27,7 @@ RUN npm install -g clean-modules@3.0.5 \
     && rm -r ./language \
     && clean-modules clean --yes
 
-FROM node:22.5.1-alpine AS node
+FROM node:22.7.0-alpine AS node
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
