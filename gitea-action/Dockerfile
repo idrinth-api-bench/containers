@@ -17,7 +17,7 @@ COPY --from=build /usr/local/bin /usr/local/bin
 
 RUN mkdir -p /usr/local/lib/node_modules/@idrinth/api-bench
 
-FROM gitea/act_runner:0.2.10 AS gitea
+FROM gitea/act_runner:0.2.11 AS gitea
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
