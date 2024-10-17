@@ -1,6 +1,6 @@
 ARG BUILD_VERSION
 
-FROM node:22.7.0-alpine AS build
+FROM node:23.0.0-alpine AS build
 
 RUN apk add --no-cache "git=2.43.0-r0" \
     && npm install -g clean-modules@3.0.5 \
@@ -12,7 +12,7 @@ RUN apk add --no-cache "git=2.43.0-r0" \
     && rm -rf /tmp/history-microservice/{README.md,src/**/*.ts} \
     && clean-modules clean --yes
 
-FROM node:22.7.0-alpine AS node
+FROM node:23.0.0-alpine AS node
 
 ARG BUILD_VERSION
 ARG BUILD_TIME
