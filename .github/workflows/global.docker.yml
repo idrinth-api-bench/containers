@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 360
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - run: git fetch --tags
       - name: Cache Docker images.
         uses: ScribeMD/docker-cache@0.5.0
@@ -42,7 +42,7 @@ jobs:
     timeout-minutes: 360
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - run: git fetch --tags
       - name: Cache Docker images.
         uses: ScribeMD/docker-cache@0.5.0

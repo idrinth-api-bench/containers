@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 360
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - run: sudo apt-get install shellcheck -y
       - run: wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
       - run: sudo mv hadolint-Linux-x86_64 /usr/local/bin/hadolint
