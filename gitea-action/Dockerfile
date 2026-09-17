@@ -2,7 +2,7 @@ ARG BUILD_VERSION
 
 FROM node:23.6.1-alpine AS node
 
-RUN apk add --no-cache "git=2.43.0-r0" && npm install -g clean-modules@3.0.5
+RUN apk add --no-cache "git=2.54.0-r0" && npm install -g clean-modules@3.0.5
 RUN git clone --reference=$BUILD_VERSION https://github.com/idrinth-api-bench/framework.git /project
 WORKDIR /project
 RUN npm ci && npm run language && npm run tsc

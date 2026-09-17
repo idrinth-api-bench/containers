@@ -2,7 +2,7 @@ ARG BUILD_VERSION
 
 FROM node:23.6.1-alpine AS build
 
-RUN apk add --no-cache "git=2.43.0-r0" \
+RUN apk add --no-cache "git=2.54.0-r0" \
     && npm install -g clean-modules@3.0.5 \
     && git clone https://github.com/idrinth-api-bench/history-microservice /project \
     && cd /tmp/history-microservice \

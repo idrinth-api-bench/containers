@@ -2,7 +2,7 @@ FROM node:23.6.1-alpine AS build
 
 ARG BUILD_VERSION
 
-RUN apk add --no-cache git=2.45.2-r0 python3 make unixodbc
+RUN apk add --no-cache git=2.54.0-r0 python3 make unixodbc
 RUN npm install -g clean-modules@3.0.5 \
     && git clone --depth=1 https://github.com/idrinth-api-bench/framework.git /project \
     && cd /project \
